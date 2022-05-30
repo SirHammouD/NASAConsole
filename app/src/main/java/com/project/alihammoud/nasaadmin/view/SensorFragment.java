@@ -1,11 +1,8 @@
-package com.project.alihammoud.nasaadmin;
+package com.project.alihammoud.nasaadmin.view;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentResultListener;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,6 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.project.alihammoud.nasaadmin.R;
+import com.project.alihammoud.nasaadmin.controller.ApiClient;
+import com.project.alihammoud.nasaadmin.controller.SensorsAdapter;
+import com.project.alihammoud.nasaadmin.model.SensorDTO;
 
 import java.util.List;
 
@@ -24,81 +25,75 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class LightFragment extends Fragment {
+public class SensorFragment extends Fragment {
 
     RecyclerView recyclerView;
-    LightsAdapter lightsAdapter;
+    SensorsAdapter sensorsAdapter;
     FloatingActionButton fab;
     RecyclerView.LayoutManager layoutManager;
-    String username;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_light, container, false);
+        View view =  inflater.inflate(R.layout.fragment_sensor, container, false);
 
+        /*Bundle bundle = this.getArguments();
+        String username = bundle.getString("username","None");
+
+
+
+        if (username.equals("stanleyjobson")){
+            fab.setVisibility(View.GONE);
+        }*/
         fab = view.findViewById(R.id.fab);
-
-        if (this.getArguments()!=null) {
-            Bundle bundle = this.getArguments();
-            username = bundle.getString("username");
-
-            if (!username.equals("stanleyjobson")) {
-                fab.setVisibility(View.GONE);
-            }
-        }
-
-
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.frame, new AddLightFragment()).addToBackStack("lights");
+                ft.replace(R.id.frame, new AddSensorFragment()).addToBackStack("sensors");
                 ft.commit();
             }
         });
 
-
         layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        recyclerView = view.findViewById(R.id.light_recycle);
+        recyclerView = view.findViewById(R.id.sensor_recycle);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
-        lightsAdapter = new LightsAdapter();
+        sensorsAdapter = new SensorsAdapter();
 
-        /*Runnable update = new Runnable() {
+       /* Runnable update = new Runnable() {
             @Override
             public void run() {
-
+                getSensors();
             }
         };
 
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
         executor.scheduleAtFixedRate(update, 0, 3, TimeUnit.SECONDS);*/
 
-        getLights();
+        getSensors();
         return view;
     }
 
-    public void getLights(){
-        Call<List<LightDTO>> lightsList = ApiClient.getService().getLights();
+    public void getSensors(){
+        Call<List<SensorDTO>> sensorsList = ApiClient.getService().getSensors();
 
-        lightsList.enqueue(new Callback<List<LightDTO>>() {
+        sensorsList.enqueue(new Callback<List<SensorDTO>>() {
             @Override
-            public void onResponse(Call<List<LightDTO>> call, Response<List<LightDTO>> response) {
+            public void onResponse(Call<List<SensorDTO>> call, Response<List<SensorDTO>> response) {
                 if (response.isSuccessful()){
-                   List<LightDTO> lightDTOS = response.body();
-                   lightsAdapter.setData(lightDTOS);
-                   recyclerView.setAdapter(lightsAdapter);
-
-             }
+                    List<SensorDTO> sensorDTOS = response.body();
+                    sensorsAdapter.setData(sensorDTOS);
+                    recyclerView.setAdapter(sensorsAdapter);
+                }
             }
 
             @Override
-            public void onFailure(Call<List<LightDTO>> call, Throwable t) {
+            public void onFailure(Call<List<SensorDTO>> call, Throwable t) {
                 Log.e("Failure", t.getLocalizedMessage() );
             }
+
+
         });
     }
-
-
 }

@@ -1,4 +1,4 @@
-package com.project.alihammoud.nasaadmin;
+package com.project.alihammoud.nasaadmin.model;
 
 import android.app.Application;
 

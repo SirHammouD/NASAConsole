@@ -1,7 +1,6 @@
-package com.project.alihammoud.nasaadmin;
+package com.project.alihammoud.nasaadmin.controller;
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -14,10 +13,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.project.alihammoud.nasaadmin.R;
+import com.project.alihammoud.nasaadmin.model.LightDTO;
+import com.project.alihammoud.nasaadmin.view.EditLightFragment;
 
 import java.util.List;
 
@@ -25,15 +27,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SensorsAdapter extends RecyclerView.Adapter<SensorsAdapter.ViewHolder> {
-    private List<SensorDTO> sensorDTOS;
+public class LightsAdapter extends RecyclerView.Adapter<LightsAdapter.ViewHolder> {
+    private List<LightDTO> lightDTOS;
     private Context context;
 
-    public SensorsAdapter() {
+    public LightsAdapter() {
     }
 
-    public void setData(List<SensorDTO> sensorDTOS){
-        this.sensorDTOS = sensorDTOS;
+    public void setData(List<LightDTO> lightDTOS){
+        this.lightDTOS = lightDTOS;
         notifyDataSetChanged();
     }
 
@@ -44,7 +46,7 @@ public class SensorsAdapter extends RecyclerView.Adapter<SensorsAdapter.ViewHold
         LayoutInflater inflater = LayoutInflater.from(context);
 
         // Inflate the custom layout
-        View contactView = inflater.inflate(R.layout.sensors_list, parent, false);
+        View contactView = inflater.inflate(R.layout.lights_list, parent, false);
 
         // Return a new holder instance
         ViewHolder viewHolder = new ViewHolder(contactView);
@@ -52,37 +54,18 @@ public class SensorsAdapter extends RecyclerView.Adapter<SensorsAdapter.ViewHold
         return viewHolder;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        SensorDTO sensorDTO = sensorDTOS.get(position);
+        LightDTO lightDTO = lightDTOS.get(position);
 
-        String hostname = sensorDTO.getHostname();
-        String name = sensorDTO.getName();
-        String brightness = sensorDTO.getBrightness();
-        String[] color = sensorDTO.getColor();
-        String id = sensorDTO.getId();
+        String hostname = lightDTO.getHostname();
+        String name = lightDTO.getName();
+        String id = lightDTO.getId();
 
-        if (brightness == null){
-            holder.brightness.setText("N/A");
-
-        }
-        else {
-            float i =Float.parseFloat(brightness)/1;
-            holder.brightness.setText(""+ i);
-        }
-
-        if (color == null){
-            holder.color.setText("N/A");
-
-        }
-        else {
-            holder.color.setText(color[0]+","+color[1]+","+color[2]);
-        }
 
         holder.hostname.setText(hostname);
         holder.name.setText(name);
-        holder.sensorID.setText(id);
+        holder.lightID.setText(id);
         holder.card.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
@@ -92,27 +75,25 @@ public class SensorsAdapter extends RecyclerView.Adapter<SensorsAdapter.ViewHold
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
-                        EditSensorFragment editSensorFragment = new EditSensorFragment();
+                        EditLightFragment editLightFragment = new EditLightFragment();
                         AppCompatActivity activity = (AppCompatActivity) view.getContext();
                         switch (menuItem.getItemId()){
                             case R.id.delete:
                                 Toast.makeText(context, id,Toast.LENGTH_LONG).show();
-                                deleteSensor(id);
+                                deleteLight(id);
                                 activity.getSupportFragmentManager().popBackStack();
 
                                 return true;
                             case R.id.edit:
-                               // Toast.makeText(context,"EDITED",Toast.LENGTH_LONG).show();
-
+                                //Toast.makeText(context,"EDITED",Toast.LENGTH_LONG).show();
                                 //Bundle
                                 Bundle bundle = new Bundle();
                                 bundle.putString("ID",id);
                                 bundle.putString("NAME",name);
                                 bundle.putString("HOSTNAME",hostname);
-                                editSensorFragment.setArguments(bundle);
+                                editLightFragment.setArguments(bundle);
                                 // Open Fragment
-
-                                activity.getSupportFragmentManager().beginTransaction().replace(R.id.frame, editSensorFragment).addToBackStack("sensors").commit();
+                                activity.getSupportFragmentManager().beginTransaction().replace(R.id.frame, editLightFragment).addToBackStack("plants").commit();
                                 return true;
                             default:
                                 return false;
@@ -124,27 +105,19 @@ public class SensorsAdapter extends RecyclerView.Adapter<SensorsAdapter.ViewHold
                 return true;
             }
         });
-
-
-
     }
 
     @Override
     public int getItemCount() {
-        return sensorDTOS.size();
+        return lightDTOS.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-
-        TextView hostname;
-        TextView name;
-        TextView brightness;
-        TextView color;
-        CardView card;
-        TextView sensorID;
-
-
+       TextView hostname;
+       TextView name;
+       CardView card;
+       TextView lightID;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -152,30 +125,29 @@ public class SensorsAdapter extends RecyclerView.Adapter<SensorsAdapter.ViewHold
 
             hostname = itemView.findViewById(R.id.hostname);
             name = itemView.findViewById(R.id.name);
-            brightness = itemView.findViewById(R.id.brightness);
-            color = itemView.findViewById(R.id.color);
             card = itemView.findViewById(R.id.card);
-            sensorID = itemView.findViewById(R.id.sensorID);
+            lightID = itemView.findViewById(R.id.lightID);
 
         }
-
     }
-    public void deleteSensor(String id){
 
-        Call<SensorDTO> SensorList = ApiClient.getService().deleteSensors(id);
+    public void deleteLight(String id){
 
-        SensorList.enqueue(new Callback<SensorDTO>() {
+        Call<LightDTO> LightList = ApiClient.getService().deleteLights(id);
+
+        LightList.enqueue(new Callback<LightDTO>() {
             @Override
-            public void onResponse(Call<SensorDTO> call, Response<SensorDTO> response) {
+            public void onResponse(Call<LightDTO> call, Response<LightDTO> response) {
                 Log.e("Success", "It Worked!");
             }
 
             @Override
-            public void onFailure(Call<SensorDTO> call, Throwable t) {
+            public void onFailure(Call<LightDTO> call, Throwable t) {
                 Log.e("Failure", t.getLocalizedMessage() );
             }
         });
 
     }
+
 
 }

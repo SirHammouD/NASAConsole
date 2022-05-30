@@ -1,5 +1,12 @@
 package com.project.alihammoud.nasaadmin;
 
+import com.project.alihammoud.nasaadmin.model.LightDTO;
+import com.project.alihammoud.nasaadmin.model.NotiDTO;
+import com.project.alihammoud.nasaadmin.model.ProfileDTO;
+import com.project.alihammoud.nasaadmin.model.RoomDTO;
+import com.project.alihammoud.nasaadmin.model.SensorDTO;
+import com.project.alihammoud.nasaadmin.model.TroubleshootDTO;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;

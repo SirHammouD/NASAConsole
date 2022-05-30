@@ -1,9 +1,13 @@
-package com.project.alihammoud.nasaadmin;
+package com.project.alihammoud.nasaadmin.view;
 
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+
+import androidx.fragment.app.Fragment;
+
+
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,22 +16,22 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-import androidx.fragment.app.Fragment;
-
 import com.flask.colorpicker.ColorPickerView;
 import com.flask.colorpicker.OnColorSelectedListener;
 import com.flask.colorpicker.builder.ColorPickerClickListener;
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
+import com.project.alihammoud.nasaadmin.R;
+import com.project.alihammoud.nasaadmin.controller.ApiClient;
+import com.project.alihammoud.nasaadmin.model.ProfileDTO;
 
 import java.util.LinkedList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class AddProfileFragment extends Fragment implements View.OnClickListener {
+public class AddPlantFragment extends Fragment implements View.OnClickListener {
 
     public Button cancel, add, pick1, pick2, pick3, pick4, pick5, pick6, pick7, pick8, pick9, pick10;
     public Button pick11, pick12, pick13, pick14, pick15, pick16, pick17, pick18, pick19, pick20;
@@ -36,6 +40,10 @@ public class AddProfileFragment extends Fragment implements View.OnClickListener
     public EditText int11, int12, int13, int14, int15, int16, int17, int18, int19, int20;
     public EditText int21, int22, int23, int24, int25;
 
+    public String[] timeList = new String[]{"06:00:00", "06:30:00", "07:00:00", "06:30:00", "07:30:00", "08:00:00", "08:30:00"
+            , "09:00:00", "09:30:00", "10:00:00", "10:30:00", "11:00:00", "11:30:00", "12:00:00", "12:30:00", "13:00:00", "13:30:00"
+            , "14:00:00", "14:30:00", "15:00:00", "15:30:00", "16:00:00","16:30:00", "17:00:00","17:30:00", "18:00:00"};
+
     boolean dpick1 =false , dpick2=false , dpick3=false, dpick4=false, dpick5=false, dpick6=false, dpick7=false, dpick8=false ,
             dpick9=false, dpick10=false, dpick11=false, dpick12 =false, dpick13=false, dpick14=false, dpick15=false, dpick16=false,
             dpick17=false, dpick18=false , dpick19=false, dpick20=false, dpick21=false , dpick22=false, dpick23=false, dpick24=false, dpick25=false;
@@ -43,18 +51,15 @@ public class AddProfileFragment extends Fragment implements View.OnClickListener
     LinkedList<String> intensityList = new LinkedList<>();
     LinkedList<String> colorList = new LinkedList<>();
 
-    public String[] timeList = new String[]{"06:00:00", "06:30:00", "07:00:00", "06:30:00", "07:30:00", "08:00:00", "08:30:00"
-            , "09:00:00", "09:30:00", "10:00:00", "10:30:00", "11:00:00", "11:30:00", "12:00:00", "12:30:00", "13:00:00", "13:30:00"
-            , "14:00:00", "14:30:00", "15:00:00", "15:30:00", "16:00:00","16:30:00", "17:00:00","17:30:00", "18:00:00"};
     public EditText eName;
     public Context context;
-    boolean no = false;
+    boolean yes = true;
     public View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_add_profile, container, false);
+        view =  inflater.inflate(R.layout.fragment_add_plant, container, false);
         context = view.getContext();
 
         eName = view.findViewById(R.id.name);
@@ -143,32 +148,10 @@ public class AddProfileFragment extends Fragment implements View.OnClickListener
         cancel = view.findViewById(R.id.cancel);
         cancel.setOnClickListener(this);
 
-
         return view;
     }
 
-    public void postProfiles(String name, boolean isPlant, LinkedList rhythmList, LinkedList intensityList, String[] timeList) {
-
-        ProfileDTO profileDTO = new ProfileDTO(name, isPlant, rhythmList, intensityList, timeList);
-        Call<ProfileDTO> profilesList = ApiClient.getService().postProfiles(profileDTO);
-
-        profilesList.enqueue(new Callback<ProfileDTO>() {
-            @Override
-            public void onResponse(Call<ProfileDTO> call, Response<ProfileDTO> response) {
-                Log.e("Success", "It Worked!");
-                getActivity().getSupportFragmentManager().popBackStack();
-            }
-
-            @Override
-            public void onFailure(Call<ProfileDTO> call, Throwable t) {
-                Log.e("Failure", t.getLocalizedMessage());
-                getActivity().getSupportFragmentManager().popBackStack();
-            }
-        });
-
-    }
-
-    public void pickColor(int id) {
+    public void pickColor(int id){
         ColorPickerDialogBuilder
                 .with(context)
                 .setTitle("Choose Color")
@@ -186,7 +169,6 @@ public class AddProfileFragment extends Fragment implements View.OnClickListener
                     public void onClick(DialogInterface dialog, int selectedColor, Integer[] allColors) {
                         Button coloredButton = view.findViewById(id);
                         coloredButton.setBackgroundColor(selectedColor);
-
                         switch (id) {
                             case R.id.pick1:
                                 dpick1= true;
@@ -279,9 +261,30 @@ public class AddProfileFragment extends Fragment implements View.OnClickListener
 
     }
 
+    public void postProfiles(String name, boolean isPlant, LinkedList rhythmList, LinkedList intensityList, String[] timeList){
+
+        ProfileDTO profileDTO = new ProfileDTO(name,isPlant, rhythmList, intensityList, timeList );
+        Call<ProfileDTO> profilesList = ApiClient.getService().postProfiles(profileDTO);
+
+        profilesList.enqueue(new Callback<ProfileDTO>() {
+            @Override
+            public void onResponse(Call<ProfileDTO> call, Response<ProfileDTO> response) {
+                Log.e("Success", "It Worked!");
+                getActivity().getSupportFragmentManager().popBackStack();
+            }
+
+            @Override
+            public void onFailure(Call<ProfileDTO> call, Throwable t) {
+                Log.e("Failure", t.getLocalizedMessage() );
+                getActivity().getSupportFragmentManager().popBackStack();
+            }
+        });
+
+    }
+
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
+        switch (v.getId()){
             case R.id.pick1:
             case R.id.pick2:
             case R.id.pick3:
@@ -393,7 +396,7 @@ public class AddProfileFragment extends Fragment implements View.OnClickListener
                 intensityList.add(int25.getText().toString().trim());
                 colorList.add(Integer.toHexString(((ColorDrawable) pick25.getBackground()).getColor()));
 
-                postProfiles(name, no, colorList, intensityList, timeList);
+                postProfiles(name, yes, colorList, intensityList, timeList);
                 break;
 
             case R.id.cancel:
@@ -402,27 +405,29 @@ public class AddProfileFragment extends Fragment implements View.OnClickListener
 
 
         }
+
     }
 
 
-   private boolean validateForm() {
+
+    private boolean validateForm() {
         boolean valid = true;
 
-       if (  eName.getText().toString().trim().isEmpty()){
-           eName.setError("Required.");
-           valid = false;
-       } else {
-           eName.setError(null);
-       }
+        if (  eName.getText().toString().trim().isEmpty()){
+            eName.setError("Required.");
+            valid = false;
+        } else {
+            eName.setError(null);
+        }
 
-       if (TextUtils.isEmpty(int1.getText().toString().trim()) ||
-               Integer.parseInt(int1.getText().toString().trim()) > 100 ||
-               Integer.parseInt(int1.getText().toString().trim()) < 0) {
-           int1.setError("Required.");
-           valid = false;
-       } else {
-           int1.setError(null);
-       }
+        if (TextUtils.isEmpty(int1.getText().toString().trim()) ||
+                Integer.parseInt(int1.getText().toString().trim()) > 100 ||
+                Integer.parseInt(int1.getText().toString().trim()) < 0) {
+            int1.setError("Required.");
+            valid = false;
+        } else {
+            int1.setError(null);
+        }
 
         if (TextUtils.isEmpty(int2.getText().toString().trim()) ||
                 Integer.parseInt(int2.getText().toString().trim())>100 ||
@@ -559,324 +564,321 @@ public class AddProfileFragment extends Fragment implements View.OnClickListener
             int14.setError(null);
         }
 
-       if (TextUtils.isEmpty(int15.getText().toString().trim()) ||
-               Integer.parseInt(int15.getText().toString().trim())>100 ||
-               Integer.parseInt(int15.getText().toString().trim())<0) {
-           int15.setError("Required.");
-           valid = false;
-       } else {
-           int15.setError(null);
-       }
+        if (TextUtils.isEmpty(int15.getText().toString().trim()) ||
+                Integer.parseInt(int15.getText().toString().trim())>100 ||
+                Integer.parseInt(int15.getText().toString().trim())<0) {
+            int15.setError("Required.");
+            valid = false;
+        } else {
+            int15.setError(null);
+        }
 
-       if (TextUtils.isEmpty(int16.getText().toString().trim()) ||
-               Integer.parseInt(int16.getText().toString().trim())>100 ||
-               Integer.parseInt(int16.getText().toString().trim())<0) {
-           int16.setError("Required.");
-           valid = false;
-       } else {
-           int16.setError(null);
-       }
+        if (TextUtils.isEmpty(int16.getText().toString().trim()) ||
+                Integer.parseInt(int16.getText().toString().trim())>100 ||
+                Integer.parseInt(int16.getText().toString().trim())<0) {
+            int16.setError("Required.");
+            valid = false;
+        } else {
+            int16.setError(null);
+        }
 
-       if (TextUtils.isEmpty(int17.getText().toString().trim()) ||
-               Integer.parseInt(int17.getText().toString().trim())>100 ||
-               Integer.parseInt(int17.getText().toString().trim())<0) {
-           int17.setError("Required.");
-           valid = false;
-       } else {
-           int17.setError(null);
-       }
+        if (TextUtils.isEmpty(int17.getText().toString().trim()) ||
+                Integer.parseInt(int17.getText().toString().trim())>100 ||
+                Integer.parseInt(int17.getText().toString().trim())<0) {
+            int17.setError("Required.");
+            valid = false;
+        } else {
+            int17.setError(null);
+        }
 
-       if (TextUtils.isEmpty(int18.getText().toString().trim()) ||
-               Integer.parseInt(int18.getText().toString().trim())>100 ||
-               Integer.parseInt(int18.getText().toString().trim())<0) {
-           int18.setError("Required.");
-           valid = false;
-       } else {
-           int18.setError(null);
-       }
+        if (TextUtils.isEmpty(int18.getText().toString().trim()) ||
+                Integer.parseInt(int18.getText().toString().trim())>100 ||
+                Integer.parseInt(int18.getText().toString().trim())<0) {
+            int18.setError("Required.");
+            valid = false;
+        } else {
+            int18.setError(null);
+        }
 
-       if (TextUtils.isEmpty(int19.getText().toString().trim()) ||
-               Integer.parseInt(int19.getText().toString().trim())>100 ||
-               Integer.parseInt(int19.getText().toString().trim())<0) {
-           int19.setError("Required.");
-           valid = false;
-       } else {
-           int19.setError(null);
-       }
+        if (TextUtils.isEmpty(int19.getText().toString().trim()) ||
+                Integer.parseInt(int19.getText().toString().trim())>100 ||
+                Integer.parseInt(int19.getText().toString().trim())<0) {
+            int19.setError("Required.");
+            valid = false;
+        } else {
+            int19.setError(null);
+        }
 
-       if (TextUtils.isEmpty(int20.getText().toString().trim()) ||
-               Integer.parseInt(int20.getText().toString().trim())>100 ||
-               Integer.parseInt(int20.getText().toString().trim())<0) {
-           int20.setError("Required.");
-           valid = false;
-       } else {
-           int20.setError(null);
-       }
+        if (TextUtils.isEmpty(int20.getText().toString().trim()) ||
+                Integer.parseInt(int20.getText().toString().trim())>100 ||
+                Integer.parseInt(int20.getText().toString().trim())<0) {
+            int20.setError("Required.");
+            valid = false;
+        } else {
+            int20.setError(null);
+        }
 
-       if (TextUtils.isEmpty(int21.getText().toString().trim()) ||
-               Integer.parseInt(int21.getText().toString().trim())>100 ||
-               Integer.parseInt(int21.getText().toString().trim())<0) {
-           int21.setError("Required.");
-           valid = false;
-       } else {
-           int21.setError(null);
-       }
+        if (TextUtils.isEmpty(int21.getText().toString().trim()) ||
+                Integer.parseInt(int21.getText().toString().trim())>100 ||
+                Integer.parseInt(int21.getText().toString().trim())<0) {
+            int21.setError("Required.");
+            valid = false;
+        } else {
+            int21.setError(null);
+        }
 
-       if (TextUtils.isEmpty(int22.getText().toString().trim()) ||
-               Integer.parseInt(int22.getText().toString().trim())>100 ||
-               Integer.parseInt(int22.getText().toString().trim())<0) {
-           int22.setError("Required.");
-           valid = false;
-       } else {
-           int22.setError(null);
-       }
+        if (TextUtils.isEmpty(int22.getText().toString().trim()) ||
+                Integer.parseInt(int22.getText().toString().trim())>100 ||
+                Integer.parseInt(int22.getText().toString().trim())<0) {
+            int22.setError("Required.");
+            valid = false;
+        } else {
+            int22.setError(null);
+        }
 
-       if (TextUtils.isEmpty(int23.getText().toString().trim()) ||
-               Integer.parseInt(int23.getText().toString().trim())>100 ||
-               Integer.parseInt(int23.getText().toString().trim())<0) {
-           int23.setError("Required.");
-           valid = false;
-       } else {
-           int23.setError(null);
-       }
-       if (TextUtils.isEmpty(int24.getText().toString().trim()) ||
-               Integer.parseInt(int24.getText().toString().trim())>100 ||
-               Integer.parseInt(int24.getText().toString().trim())<0) {
-           int24.setError("Required.");
-           valid = false;
-       } else {
-           int24.setError(null);
-       }
+        if (TextUtils.isEmpty(int23.getText().toString().trim()) ||
+                Integer.parseInt(int23.getText().toString().trim())>100 ||
+                Integer.parseInt(int23.getText().toString().trim())<0) {
+            int23.setError("Required.");
+            valid = false;
+        } else {
+            int23.setError(null);
+        }
+        if (TextUtils.isEmpty(int24.getText().toString().trim()) ||
+                Integer.parseInt(int24.getText().toString().trim())>100 ||
+                Integer.parseInt(int24.getText().toString().trim())<0) {
+            int24.setError("Required.");
+            valid = false;
+        } else {
+            int24.setError(null);
+        }
 
-       if (TextUtils.isEmpty(int25.getText().toString().trim()) ||
-               Integer.parseInt(int25.getText().toString().trim())>100 ||
-               Integer.parseInt(int25.getText().toString().trim())<0) {
-           int25.setError("Required.");
-           valid = false;
-       } else {
-           int25.setError(null);
-       }
+        if (TextUtils.isEmpty(int25.getText().toString().trim()) ||
+                Integer.parseInt(int25.getText().toString().trim())>100 ||
+                Integer.parseInt(int25.getText().toString().trim())<0) {
+            int25.setError("Required.");
+            valid = false;
+        } else {
+            int25.setError(null);
+        }
 
 
-       if ( !dpick1 )
-       {
-           pick1.setError("Required.");
-           valid = false;
+        if ( !dpick1 )
+        {
+            pick1.setError("Required.");
+            valid = false;
 
-       } else {
-           pick1.setError(null);
-       }
+        } else {
+            pick1.setError(null);
+        }
 
-       if ( !dpick2 )
-       {
-           pick2.setError("Required.");
-           valid = false;
+        if ( !dpick2 )
+        {
+            pick2.setError("Required.");
+            valid = false;
 
-       } else {
-           pick2.setError(null);
-       }
+        } else {
+            pick2.setError(null);
+        }
 
-       if ( !dpick3 )
-       {
-           pick3.setError("Required.");
-           valid = false;
+        if ( !dpick3 )
+        {
+            pick3.setError("Required.");
+            valid = false;
 
-       } else {
-           pick3.setError(null);
-       }
+        } else {
+            pick3.setError(null);
+        }
 
-       if ( !dpick4 )
-       {
-           pick4.setError("Required.");
-           valid = false;
+        if ( !dpick4 )
+        {
+            pick4.setError("Required.");
+            valid = false;
 
-       } else {
-           pick4.setError(null);
-       }
+        } else {
+            pick4.setError(null);
+        }
 
-       if ( !dpick5 )
-       {
-           pick5.setError("Required.");
-           valid = false;
+        if ( !dpick5 )
+        {
+            pick5.setError("Required.");
+            valid = false;
 
-       } else {
-           pick5.setError(null);
-       }
+        } else {
+            pick5.setError(null);
+        }
 
-       if ( !dpick6 )
-       {
-           pick6.setError("Required.");
-           valid = false;
+        if ( !dpick6 )
+        {
+            pick6.setError("Required.");
+            valid = false;
 
-       } else {
-           pick6.setError(null);
-       }
+        } else {
+            pick6.setError(null);
+        }
 
-       if ( !dpick7 )
-       {
-           pick7.setError("Required.");
-           valid = false;
+        if ( !dpick7 )
+        {
+            pick7.setError("Required.");
+            valid = false;
 
-       } else {
-           pick7.setError(null);
-       }
-       if ( !dpick8 )
-       {
-           pick8.setError("Required.");
-           valid = false;
+        } else {
+            pick7.setError(null);
+        }
+        if ( !dpick8 )
+        {
+            pick8.setError("Required.");
+            valid = false;
 
-       } else {
-           pick8.setError(null);
-       }
+        } else {
+            pick8.setError(null);
+        }
 
-       if ( !dpick9 )
-       {
-           pick9.setError("Required.");
-           valid = false;
+        if ( !dpick9 )
+        {
+            pick9.setError("Required.");
+            valid = false;
 
-       } else {
-           pick9.setError(null);
-       }
+        } else {
+            pick9.setError(null);
+        }
 
-       if ( !dpick10 )
-       {
-           pick10.setError("Required.");
-           valid = false;
+        if ( !dpick10 )
+        {
+            pick10.setError("Required.");
+            valid = false;
 
-       } else {
-           pick10.setError(null);
-       }
+        } else {
+            pick10.setError(null);
+        }
 
-       if ( !dpick11 )
-       {
-           pick11.setError("Required.");
-           valid = false;
+        if ( !dpick11 )
+        {
+            pick11.setError("Required.");
+            valid = false;
 
-       } else {
-           pick11.setError(null);
-       }
+        } else {
+            pick11.setError(null);
+        }
 
-       if ( !dpick12 )
-       {
-           pick12.setError("Required.");
-           valid = false;
+        if ( !dpick12 )
+        {
+            pick12.setError("Required.");
+            valid = false;
 
-       } else {
-           pick12.setError(null);
-       }
+        } else {
+            pick12.setError(null);
+        }
 
-       if ( !dpick13 )
-       {
-           pick13.setError("Required.");
-           valid = false;
+        if ( !dpick13 )
+        {
+            pick13.setError("Required.");
+            valid = false;
 
-       } else {
-           pick13.setError(null);
-       }
+        } else {
+            pick13.setError(null);
+        }
 
-       if ( !dpick14 )
-       {
-           pick14.setError("Required.");
-           valid = false;
+        if ( !dpick14 )
+        {
+            pick14.setError("Required.");
+            valid = false;
 
-       } else {
-           pick14.setError(null);
-       }
+        } else {
+            pick14.setError(null);
+        }
 
-       if ( !dpick15 )
-       {
-           pick15.setError("Required.");
-           valid = false;
+        if ( !dpick15 )
+        {
+            pick15.setError("Required.");
+            valid = false;
 
-       } else {
-           pick15.setError(null);
-       }
-       if ( !dpick16)
-       {
-           pick16.setError("Required.");
-           valid = false;
+        } else {
+            pick15.setError(null);
+        }
+        if ( !dpick16)
+        {
+            pick16.setError("Required.");
+            valid = false;
 
-       } else {
-           pick16.setError(null);
-       }
-       if ( !dpick17 )
-       {
-           pick17.setError("Required.");
-           valid = false;
+        } else {
+            pick16.setError(null);
+        }
+        if ( !dpick17 )
+        {
+            pick17.setError("Required.");
+            valid = false;
 
-       } else {
-           pick17.setError(null);
-       }
-       if ( !dpick18 )
-       {
-           pick18.setError("Required.");
-           valid = false;
+        } else {
+            pick17.setError(null);
+        }
+        if ( !dpick18 )
+        {
+            pick18.setError("Required.");
+            valid = false;
 
-       } else {
-           pick18.setError(null);
-       }
-       if ( !dpick19 )
-       {
-           pick19.setError("Required.");
-           valid = false;
+        } else {
+            pick18.setError(null);
+        }
+        if ( !dpick19 )
+        {
+            pick19.setError("Required.");
+            valid = false;
 
-       } else {
-           pick19.setError(null);
-       }
-       if ( !dpick20 )
-       {
-           pick20.setError("Required.");
-           valid = false;
+        } else {
+            pick19.setError(null);
+        }
+        if ( !dpick20 )
+        {
+            pick20.setError("Required.");
+            valid = false;
 
-       } else {
-           pick20.setError(null);
-       }
-       if ( !dpick21)
-       {
-           pick21.setError("Required.");
-           valid = false;
+        } else {
+            pick20.setError(null);
+        }
+        if ( !dpick21)
+        {
+            pick21.setError("Required.");
+            valid = false;
 
-       } else {
-           pick21.setError(null);
-       }
-       if ( !dpick22 )
-       {
-           pick22.setError("Required.");
-           valid = false;
+        } else {
+            pick21.setError(null);
+        }
+        if ( !dpick22 )
+        {
+            pick22.setError("Required.");
+            valid = false;
 
-       } else {
-           pick22.setError(null);
-       }
+        } else {
+            pick22.setError(null);
+        }
 
-       if ( !dpick23 )
-       {
-           pick23.setError("Required.");
-           valid = false;
+        if ( !dpick23 )
+        {
+            pick23.setError("Required.");
+            valid = false;
 
-       } else {
-           pick23.setError(null);
-       }
+        } else {
+            pick23.setError(null);
+        }
 
-       if ( !dpick24 )
-       {
-           pick24.setError("Required.");
-           valid = false;
+        if ( !dpick24 )
+        {
+            pick24.setError("Required.");
+            valid = false;
 
-       } else {
-           pick24.setError(null);
-       }
+        } else {
+            pick24.setError(null);
+        }
 
-       if ( !dpick25 )
-       {
-           pick25.setError("Required.");
-           valid = false;
+        if ( !dpick25 )
+        {
+            pick25.setError("Required.");
+            valid = false;
 
-       } else {
-           pick25.setError(null);
-       }
+        } else {
+            pick25.setError(null);
+        }
         return valid;
     }
-
-
-
 }

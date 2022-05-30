@@ -1,4 +1,4 @@
-package com.project.alihammoud.nasaadmin;
+package com.project.alihammoud.nasaadmin.view;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +10,10 @@ import android.widget.EditText;
 
 import androidx.fragment.app.Fragment;
 
+import com.project.alihammoud.nasaadmin.R;
+import com.project.alihammoud.nasaadmin.controller.ApiClient;
+import com.project.alihammoud.nasaadmin.model.SensorDTO;
+
 import java.util.List;
 
 import retrofit2.Call;
@@ -17,23 +21,23 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class EditLightFragment extends Fragment {
+public class EditSensorFragment extends Fragment {
 
     public Button cancel, add;
     public EditText eName;
     public EditText eHostname;
+    public EditText eColor;
+    public EditText eBrightness;
     public String name, hostname, id;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_add_light, container, false);
+        View view =  inflater.inflate(R.layout.fragment_add_sensor, container, false);
 
         name = getArguments().getString("NAME");
         hostname = getArguments().getString("HOSTNAME");
         id = getArguments().getString("ID");
-
 
         eName = view.findViewById(R.id.name);
         eName.setText(name);
@@ -41,7 +45,8 @@ public class EditLightFragment extends Fragment {
         eHostname = view.findViewById(R.id.hostname);
         eHostname.setText(hostname);
 
-
+        eBrightness = view.findViewById(R.id.brightness);
+        eColor = view.findViewById(R.id.color);
 
         add = view.findViewById(R.id.add);
         add.setOnClickListener(new View.OnClickListener() {
@@ -49,7 +54,7 @@ public class EditLightFragment extends Fragment {
             public void onClick(View view) {
                 String name = eName.getText().toString().trim();
                 String hostname = eHostname.getText().toString().trim();
-                postLights(name, hostname);
+                postSensors(hostname,name);
             }
         });
 
@@ -65,24 +70,24 @@ public class EditLightFragment extends Fragment {
         return view;
     }
 
-    public void postLights(String n, String h){
+    public void postSensors(String hostname, String name){
 
         if (!validateForm()) {
             return;
         }
 
-        LightDTO lightDTO = new LightDTO(n,h);
-        Call<List<LightDTO>> lightsList = ApiClient.getService().putLights(id, lightDTO);
+        SensorDTO sensorDTO = new SensorDTO(hostname,name);
+        Call<List<SensorDTO>> sensorsList = ApiClient.getService().putSensors(id, sensorDTO);
 
-        lightsList.enqueue(new Callback<List<LightDTO>>() {
+        sensorsList.enqueue(new Callback<List<SensorDTO>>() {
             @Override
-            public void onResponse(Call<List<LightDTO>> call, Response<List<LightDTO>> response) {
+            public void onResponse(Call<List<SensorDTO>> call, Response<List<SensorDTO>> response) {
                 Log.e("Success", "It Worked!");
                 getActivity().getSupportFragmentManager().popBackStack();
             }
 
             @Override
-            public void onFailure(Call<List<LightDTO>> call, Throwable t) {
+            public void onFailure(Call<List<SensorDTO>> call, Throwable t) {
                 Log.e("Failure", t.getLocalizedMessage() );
                 getActivity().getSupportFragmentManager().popBackStack();
             }

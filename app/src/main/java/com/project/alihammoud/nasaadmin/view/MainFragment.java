@@ -1,11 +1,10 @@
-package com.project.alihammoud.nasaadmin;
+package com.project.alihammoud.nasaadmin.view;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.media.MediaPlayer;
-import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -13,7 +12,6 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +19,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
+
+import com.project.alihammoud.nasaadmin.R;
+import com.project.alihammoud.nasaadmin.controller.ApiClient;
+import com.project.alihammoud.nasaadmin.model.LoginHelper;
+import com.project.alihammoud.nasaadmin.model.NotiDTO;
+import com.project.alihammoud.nasaadmin.model.TroubleshootDTO;
 
 import java.util.List;
 

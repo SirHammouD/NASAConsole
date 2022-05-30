@@ -1,4 +1,4 @@
-package com.project.alihammoud.nasaadmin;
+package com.project.alihammoud.nasaadmin.view;
 
 import android.os.Bundle;
 
@@ -13,6 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.project.alihammoud.nasaadmin.controller.LightsAdapter;
+import com.project.alihammoud.nasaadmin.R;
+import com.project.alihammoud.nasaadmin.controller.ApiClient;
+import com.project.alihammoud.nasaadmin.model.LightDTO;
 
 import java.util.List;
 
@@ -21,75 +25,81 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class RoomFragment extends Fragment {
+public class LightFragment extends Fragment {
 
     RecyclerView recyclerView;
-    RoomsAdapter roomsAdapter;
+    LightsAdapter lightsAdapter;
     FloatingActionButton fab;
     RecyclerView.LayoutManager layoutManager;
+    String username;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_room, container, false);
+        View view =  inflater.inflate(R.layout.fragment_light, container, false);
 
-
-       /* Bundle bundle = this.getArguments();
-        String username = bundle.getString("username","None");
-
-
-
-        if (username.equals("stanleyjobson")){
-            fab.setVisibility(View.GONE);
-        }*/
         fab = view.findViewById(R.id.fab);
+
+        if (this.getArguments()!=null) {
+            Bundle bundle = this.getArguments();
+            username = bundle.getString("username");
+
+            if (!username.equals("stanleyjobson")) {
+                fab.setVisibility(View.GONE);
+            }
+        }
+
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.frame, new AddRoomFragment()).addToBackStack("rooms");
+                ft.replace(R.id.frame, new AddLightFragment()).addToBackStack("lights");
                 ft.commit();
             }
         });
 
+
         layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        recyclerView = view.findViewById(R.id.room_recycle);
+        recyclerView = view.findViewById(R.id.light_recycle);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
-        roomsAdapter = new RoomsAdapter();
+        lightsAdapter = new LightsAdapter();
 
         /*Runnable update = new Runnable() {
             @Override
             public void run() {
-                getRooms();
+
             }
         };
 
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
         executor.scheduleAtFixedRate(update, 0, 3, TimeUnit.SECONDS);*/
 
-        getRooms();
-
+        getLights();
         return view;
     }
 
-    public void getRooms(){
-        Call<List<RoomDTO>> roomsList = ApiClient.getService().getRooms();
+    public void getLights(){
+        Call<List<LightDTO>> lightsList = ApiClient.getService().getLights();
 
-        roomsList.enqueue(new Callback<List<RoomDTO>>() {
+        lightsList.enqueue(new Callback<List<LightDTO>>() {
             @Override
-            public void onResponse(Call<List<RoomDTO>> call, Response<List<RoomDTO>> response) {
+            public void onResponse(Call<List<LightDTO>> call, Response<List<LightDTO>> response) {
                 if (response.isSuccessful()){
-                    List<RoomDTO> RoomDTO = response.body();
-                    roomsAdapter.setData(RoomDTO);
-                    recyclerView.setAdapter(roomsAdapter);
-                }
+                   List<LightDTO> lightDTOS = response.body();
+                   lightsAdapter.setData(lightDTOS);
+                   recyclerView.setAdapter(lightsAdapter);
+
+             }
             }
 
             @Override
-            public void onFailure(Call<List<RoomDTO>> call, Throwable t) {
+            public void onFailure(Call<List<LightDTO>> call, Throwable t) {
                 Log.e("Failure", t.getLocalizedMessage() );
             }
         });
     }
+
+
 }

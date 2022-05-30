@@ -1,4 +1,4 @@
-package com.project.alihammoud.nasaadmin;
+package com.project.alihammoud.nasaadmin.view;
 
 import android.os.Bundle;
 
@@ -13,6 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.project.alihammoud.nasaadmin.R;
+import com.project.alihammoud.nasaadmin.controller.ApiClient;
+import com.project.alihammoud.nasaadmin.controller.ProfilesAdapter;
+import com.project.alihammoud.nasaadmin.model.ProfileDTO;
 
 import java.util.ArrayList;
 import java.util.List;

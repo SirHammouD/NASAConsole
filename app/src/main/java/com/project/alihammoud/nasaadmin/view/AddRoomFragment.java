@@ -1,11 +1,10 @@
-package com.project.alihammoud.nasaadmin;
+package com.project.alihammoud.nasaadmin.view;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,6 +12,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+
+import com.project.alihammoud.nasaadmin.R;
+import com.project.alihammoud.nasaadmin.controller.ApiClient;
+import com.project.alihammoud.nasaadmin.model.LightDTO;
+import com.project.alihammoud.nasaadmin.model.ProfileDTO;
+import com.project.alihammoud.nasaadmin.model.RoomDTO;
+import com.project.alihammoud.nasaadmin.model.SensorDTO;
 
 import java.util.ArrayList;
 import java.util.List;

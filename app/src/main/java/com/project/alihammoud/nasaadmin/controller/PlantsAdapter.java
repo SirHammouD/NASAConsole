@@ -1,4 +1,4 @@
-package com.project.alihammoud.nasaadmin;
+package com.project.alihammoud.nasaadmin.controller;
 
 import android.content.Context;
 import android.util.Log;
@@ -16,17 +16,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.project.alihammoud.nasaadmin.R;
+import com.project.alihammoud.nasaadmin.model.ProfileDTO;
+
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ProfilesAdapter extends RecyclerView.Adapter<ProfilesAdapter.ViewHolder> {
+public class PlantsAdapter extends RecyclerView.Adapter<PlantsAdapter.ViewHolder> {
     private List<ProfileDTO> profileDTOS;
     private Context context;
 
-    public ProfilesAdapter() {
+    public PlantsAdapter() {
     }
 
     public void setData(List<ProfileDTO> profileDTOS){
@@ -59,6 +62,7 @@ public class ProfilesAdapter extends RecyclerView.Adapter<ProfilesAdapter.ViewHo
 
         holder.name.setText(name);
         holder.rhythm.setText(id);
+
         holder.card.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
@@ -72,18 +76,11 @@ public class ProfilesAdapter extends RecyclerView.Adapter<ProfilesAdapter.ViewHo
                         switch (menuItem.getItemId()){
                             case R.id.delete:
                                 Toast.makeText(context, id,Toast.LENGTH_LONG).show();
-                                deleteProfile(id);
+                                deletePlant(id);
                                 activity.getSupportFragmentManager().popBackStack();
                                 return true;
                             case R.id.edit:
                                 Toast.makeText(context,"Coming Soon",Toast.LENGTH_LONG).show();
-                                /*Bundle bundle = new Bundle();
-                                bundle.putString("ID",id);
-                                bundle.putString();
-                                bundle.putString();
-                                bundle.putString();
-                                EditRoomFragment editRoomFragment = new EditRoomFragment();
-                                editRoomFragment.setArguments(bundle);*/
                                 return true;
                             default:
                                 return false;
@@ -106,23 +103,21 @@ public class ProfilesAdapter extends RecyclerView.Adapter<ProfilesAdapter.ViewHo
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView name;
-        TextView rhythm;
         TextView isPlant;
+        TextView rhythm;
         CardView card;
-        TextView ID;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
+
             name = itemView.findViewById(R.id.name);
             card = itemView.findViewById(R.id.card);
             rhythm = itemView.findViewById(R.id.rhythmID);
-            ID = itemView.findViewById(R.id.sensorID);
-
         }
     }
 
-    public void deleteProfile(String id){
+    public void deletePlant(String id){
 
         Call<ProfileDTO> ProfileList = ApiClient.getService().deleteProfiles(id);
 
@@ -139,6 +134,5 @@ public class ProfilesAdapter extends RecyclerView.Adapter<ProfilesAdapter.ViewHo
         });
 
     }
-
 
 }
