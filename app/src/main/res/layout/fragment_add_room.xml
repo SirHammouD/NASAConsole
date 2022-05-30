@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/white">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/nasa_small"
+            android:scaleType="centerCrop" />
+
+        <ScrollView
+            android:background="#FFF"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+
+                <EditText
+                    android:textSize="14sp"
+                    android:id="@+id/name"
+                    android:layout_marginRight="50dp"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/custom_button_trans"
+                    android:hint="Name"
+                    android:drawablePadding="10dp"
+                    android:inputType="textPersonName" />
+                <LinearLayout
+                    android:background="@drawable/custom_button_trans"
+                    android:orientation="horizontal"
+                    android:layout_marginRight="50dp"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="3">
+                    <TextView
+                        android:layout_weight="2"
+                        android:textSize="14sp"
+                        android:text="Profile ID:"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        />
+                    <Spinner
+                        android:layout_weight="1"
+                        android:textSize="14sp"
+                        android:id="@+id/spinnerProfile"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_gravity="center_horizontal" />
+
+
+                    </LinearLayout>
+
+                <LinearLayout
+                    android:background="@drawable/custom_button_trans"
+                    android:orientation="horizontal"
+                    android:layout_marginRight="50dp"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="3">
+                    <TextView
+                        android:layout_weight="2"
+                        android:textSize="14sp"
+                        android:text="Sensor ID:"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        />
+                    <Spinner
+                        android:layout_weight="1"
+                        android:textSize="14sp"
+                        android:id="@+id/spinnerSensor"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_gravity="center_horizontal" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:background="@drawable/custom_button_trans"
+                    android:orientation="horizontal"
+                    android:layout_marginRight="50dp"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="3">
+                    <TextView
+                        android:layout_weight="2"
+                        android:textSize="14sp"
+                        android:text="Light ID:"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        />
+                    <Spinner
+                        android:layout_weight="1"
+                        android:textSize="14sp"
+                        android:id="@+id/spinnerLight"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_gravity="center_horizontal" />
+
+
+                </LinearLayout>
+
+
+
+                <Button
+                    android:spinnerMode="dropdown"
+                    android:id="@+id/add"
+                    android:textColor="@android:color/white"
+                    android:layout_width="fill_parent"
+                    android:layout_marginRight="50dp"
+                    android:layout_marginLeft="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/custom_button"
+                    android:text="ADD" />
+
+                <Button
+                    android:id="@+id/cancel"
+                    android:textColor="@android:color/white"
+                    android:layout_width="fill_parent"
+                    android:layout_marginRight="50dp"
+                    android:layout_marginLeft="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:background="@drawable/custom_button"
+                    android:text="CANCEL" />
+
+            </LinearLayout>
+        </ScrollView>
+
+
+    </LinearLayout>
+
+
+
+</RelativeLayout>
